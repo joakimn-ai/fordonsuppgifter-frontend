@@ -1,223 +1,282 @@
 <!DOCTYPE html>
 <html lang="sv">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Biluppgifter Sverige</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    background-color: #d9eefd; /* ljusblå bakgrund */
-    max-width: 700px;
-    margin: 2rem auto;
-    padding: 1rem;
-  }
-  h1 {
-    text-align: center;
-    color: #333;
-  }
-  input, button {
-    padding: 10px;
-    font-size: 1rem;
-  }
-  input {
-    width: calc(100% - 110px);
-    margin-right: 10px;
-  }
-  button {
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
-  button:hover {
-    background-color: #0056b3;
-  }
-  .car-image {
-    text-align: center;
-    margin-top: 1rem;
-  }
-  .car-image img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-  }
-  .category-container {
-    display: flex;
-    gap: 1rem;
-    margin-top: 1rem;
-    flex-wrap: wrap;
-  }
-  .category-box {
-    background-color: white;
-    border-radius: 12px;
-    padding: 1rem 1.5rem;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    flex: 1 1 200px;
-    min-width: 200px;
-  }
-  .category-box h3 {
-    margin-top: 0;
-    margin-bottom: 0.5rem;
-    color: #007BFF;
-    border-bottom: 2px solid #007BFF;
-    padding-bottom: 0.3rem;
-  }
-  .category-box table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  .category-box td {
-    padding: 6px 8px;
-    border-bottom: 1px solid #eee;
-  }
-  .category-box td:first-child {
-    font-weight: bold;
-    width: 45%;
-    color: #555;
-  }
-  .history {
-    margin-top: 2rem;
-  }
-  .history ul {
-    list-style: none;
-    padding: 0;
-  }
-  .history li {
-    cursor: pointer;
-    color: #007BFF;
-  }
-  .history li:hover {
-    text-decoration: underline;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Biluppgifter Sverige – JoAPI2</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(to bottom right, #d0ebff, #f0f9ff);
+      margin: 0;
+      padding: 2rem;
+      color: #222;
+    }
+
+    h1 {
+      text-align: center;
+      color: #004d99;
+      font-size: 2.2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .search-section {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    input {
+      padding: 12px;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: 1px solid #bbb;
+      width: 250px;
+    }
+
+    button {
+      padding: 12px 20px;
+      font-size: 1rem;
+      background-color: #007BFF;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .car-image {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .car-image img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .category-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      justify-content: center;
+    }
+
+    .category-box {
+      background-color: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      padding: 1.5rem;
+      width: 280px;
+      transition: transform 0.3s ease;
+    }
+
+    .category-box:hover {
+      transform: translateY(-5px);
+    }
+
+    .category-box h3 {
+      margin-top: 0;
+      color: #007BFF;
+      border-bottom: 2px solid #007BFF;
+      padding-bottom: 5px;
+      font-size: 1.2rem;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    td {
+      padding: 6px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    td:first-child {
+      font-weight: 600;
+      color: #444;
+      width: 50%;
+    }
+
+    .history {
+      max-width: 700px;
+      margin: 2rem auto 0;
+    }
+
+    .history h3 {
+      margin-bottom: 0.5rem;
+      color: #333;
+    }
+
+    .history ul {
+      list-style: none;
+      padding-left: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .history li {
+      background-color: #eef6ff;
+      color: #007BFF;
+      padding: 6px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .history li:hover {
+      background-color: #d0eaff;
+    }
+
+    @media (max-width: 768px) {
+      .category-box {
+        width: 100%;
+      }
+
+      .search-section {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      input {
+        width: 100%;
+      }
+    }
+  </style>
 </head>
 <body>
+
   <h1>Biluppgifter Sverige</h1>
 
-  <div>
-    <input type="text" id="regInput" placeholder="t.ex. PRC515" />
+  <div class="search-section">
+    <input type="text" id="regInput" placeholder="t.ex. ABC123" />
     <button onclick="fetchCarInfo()">Sök</button>
   </div>
 
   <div class="car-image" id="carImage"></div>
 
-  <div class="category-container" id="carInfo">
-    <!-- Information visas här i kategoriboxar -->
-  </div>
+  <div class="category-container" id="carInfo"></div>
 
   <div class="history">
     <h3>Tidigare sökningar</h3>
     <ul id="searchHistory"></ul>
   </div>
 
-<script>
-  const username = "JoAPI2"; // användarnamn direkt inlagt
+  <script>
+    const username = "JoAPI2";
 
-  function saveToHistory(regNumber) {
-    let history = JSON.parse(localStorage.getItem("carSearchHistory")) || [];
-    if (!history.includes(regNumber)) {
-      history.unshift(regNumber);
-      if (history.length > 10) history.pop();
-      localStorage.setItem("carSearchHistory", JSON.stringify(history));
-      renderHistory();
-    }
-  }
-
-  function renderHistory() {
-    const history = JSON.parse(localStorage.getItem("carSearchHistory")) || [];
-    const historyList = document.getElementById("searchHistory");
-    historyList.innerHTML = "";
-    history.forEach(reg => {
-      const li = document.createElement("li");
-      li.textContent = reg;
-      li.onclick = () => {
-        document.getElementById("regInput").value = reg;
-        fetchCarInfo();
-      };
-      historyList.appendChild(li);
-    });
-  }
-
-  function safeText(text) {
-    return text ? text : "-";
-  }
-
-  async function fetchCarInfo() {
-    const regNumber = document.getElementById("regInput").value.trim().toUpperCase();
-    const carInfoDiv = document.getElementById("carInfo");
-    const imageDiv = document.getElementById("carImage");
-
-    if (!regNumber.match(/^[A-Z0-9]{3,8}$/)) {
-      carInfoDiv.innerHTML = "<p style='color:red;'>Ogiltigt registreringsnummer. Försök igen.</p>";
-      imageDiv.innerHTML = "";
-      return;
+    function safeText(text) {
+      return text || "-";
     }
 
-    carInfoDiv.textContent = "Hämtar data, vänligen vänta...";
-    imageDiv.innerHTML = "";
+    function saveToHistory(reg) {
+      let history = JSON.parse(localStorage.getItem("carSearchHistory")) || [];
+      if (!history.includes(reg)) {
+        history.unshift(reg);
+        if (history.length > 10) history.pop();
+        localStorage.setItem("carSearchHistory", JSON.stringify(history));
+        renderHistory();
+      }
+    }
 
-    const url = `https://www.regcheck.org.uk/api/reg.asmx/CheckSweden?RegistrationNumber=${regNumber}&username=${username}`;
+    function renderHistory() {
+      const list = document.getElementById("searchHistory");
+      const history = JSON.parse(localStorage.getItem("carSearchHistory")) || [];
+      list.innerHTML = "";
+      history.forEach(reg => {
+        const li = document.createElement("li");
+        li.textContent = reg;
+        li.onclick = () => {
+          document.getElementById("regInput").value = reg;
+          fetchCarInfo();
+        };
+        list.appendChild(li);
+      });
+    }
 
-    try {
-      const response = await fetch(url);
-      const xmlText = await response.text();
-      const parser = new DOMParser();
-      const xmlDoc = parser.parseFromString(xmlText, "application/xml");
-      const vehicleJsonNode = xmlDoc.getElementsByTagName("vehicleJson")[0];
+    async function fetchCarInfo() {
+      const reg = document.getElementById("regInput").value.trim().toUpperCase();
+      const infoBox = document.getElementById("carInfo");
+      const imageBox = document.getElementById("carImage");
 
-      if (vehicleJsonNode && vehicleJsonNode.textContent) {
-        const vehicleData = JSON.parse(vehicleJsonNode.textContent);
+      if (!reg.match(/^[A-Z0-9]{3,8}$/)) {
+        infoBox.innerHTML = "<p style='color:red;'>Ogiltigt registreringsnummer.</p>";
+        imageBox.innerHTML = "";
+        return;
+      }
 
-        // Visa bilden (imageURL)
-        if(vehicleData.ImageUrl) {
-          imageDiv.innerHTML = `<img src="${vehicleData.ImageUrl}" alt="Bild på bilen" />`;
-        } else {
-          imageDiv.innerHTML = "";
-        }
+      infoBox.innerHTML = "<p>Hämtar data...</p>";
+      imageBox.innerHTML = "";
 
-        // Bygg kategoriserad info i tre boxar: Bil, Motor och Identifikation
-        carInfoDiv.innerHTML = `
+      const url = `https://www.regcheck.org.uk/api/reg.asmx/CheckSweden?RegistrationNumber=${reg}&username=${username}`;
+
+      try {
+        const res = await fetch(url);
+        const xml = await res.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(xml, "application/xml");
+        const json = doc.getElementsByTagName("vehicleJson")[0]?.textContent;
+        if (!json) throw new Error("Ingen data");
+
+        const data = JSON.parse(json);
+
+        // Bild
+        imageBox.innerHTML = data.ImageUrl
+          ? `<img src="${data.ImageUrl}" alt="Fordonsbild" />`
+          : "";
+
+        // Kategorier
+        infoBox.innerHTML = `
           <div class="category-box">
             <h3>Bil</h3>
             <table>
-              <tr><td>Fabrikat:</td><td>${safeText(vehicleData.CarMake?.CurrentTextValue)}</td></tr>
-              <tr><td>Modell:</td><td>${safeText(vehicleData.CarModel?.CurrentTextValue)}</td></tr>
-              <tr><td>Kaross:</td><td>${safeText(vehicleData.BodyStyle?.CurrentTextValue)}</td></tr>
-              <tr><td>Färg:</td><td>${safeText(vehicleData.Colour)}</td></tr>
-              <tr><td>Antal sittplatser:</td><td>${safeText(vehicleData.NumberOfSeats?.CurrentTextValue)}</td></tr>
+              <tr><td>Märke:</td><td>${safeText(data.CarMake?.CurrentTextValue)}</td></tr>
+              <tr><td>Modell:</td><td>${safeText(data.CarModel?.CurrentTextValue)}</td></tr>
+              <tr><td>Kaross:</td><td>${safeText(data.BodyStyle?.CurrentTextValue)}</td></tr>
+              <tr><td>Färg:</td><td>${safeText(data.Colour)}</td></tr>
+              <tr><td>Sittplatser:</td><td>${safeText(data.NumberOfSeats?.CurrentTextValue)}</td></tr>
             </table>
           </div>
           <div class="category-box">
             <h3>Motor</h3>
             <table>
-              <tr><td>Motorstorlek:</td><td>${safeText(vehicleData.EngineSize?.CurrentTextValue)}</td></tr>
-              <tr><td>Bränsletyp:</td><td>${safeText(vehicleData.FuelType?.CurrentTextValue)}</td></tr>
-              <tr><td>Växellåda:</td><td>${safeText(vehicleData.Transmission)}</td></tr>
-              <tr><td>CO₂-utsläpp:</td><td>${safeText(vehicleData.Co2)}</td></tr>
+              <tr><td>Storlek:</td><td>${safeText(data.EngineSize?.CurrentTextValue)}</td></tr>
+              <tr><td>Bränsle:</td><td>${safeText(data.FuelType?.CurrentTextValue)}</td></tr>
+              <tr><td>Växellåda:</td><td>${safeText(data.Transmission)}</td></tr>
+              <tr><td>CO₂:</td><td>${safeText(data.Co2)}</td></tr>
             </table>
           </div>
           <div class="category-box">
             <h3>Identifikation</h3>
             <table>
-              <tr><td>Chassinummer (VIN):</td><td>${safeText(vehicleData.VechileIdentificationNumber)}</td></tr>
+              <tr><td>VIN:</td><td>${safeText(data.VechileIdentificationNumber)}</td></tr>
             </table>
           </div>
         `;
 
-        saveToHistory(regNumber);
-      } else {
-        carInfoDiv.innerHTML = "<p>Inga data hittades för detta registreringsnummer.</p>";
-        imageDiv.innerHTML = "";
+        saveToHistory(reg);
+      } catch (err) {
+        infoBox.innerHTML = `<p style="color:red;">Fel vid hämtning av data.</p>`;
       }
-    } catch (error) {
-      carInfoDiv.innerHTML = `<p style="color:red;">Ett fel uppstod: ${error.message}</p>`;
-      imageDiv.innerHTML = "";
     }
-  }
 
-  renderHistory();
-</script>
+    renderHistory();
+  </script>
 </body>
 </html>
