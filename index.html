@@ -2,131 +2,141 @@
 <html lang="sv">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Fordonsuppgifter</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fordonsuppgifter - JoAPI2</title>
   <style>
     body {
+      background-color: #e0f0ff;
       font-family: Arial, sans-serif;
-      background-color: #e6f2ff;
       margin: 0;
       padding: 20px;
     }
     h1 {
       text-align: center;
+      color: #003366;
     }
-    .container {
-      max-width: 900px;
-      margin: auto;
-    }
-    .input-section {
+    #searchSection {
       text-align: center;
       margin-bottom: 30px;
     }
     input[type="text"] {
       padding: 10px;
+      font-size: 16px;
       width: 200px;
       border-radius: 5px;
       border: 1px solid #ccc;
     }
     button {
-      padding: 10px 15px;
-      margin-left: 10px;
-      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
       background-color: #007acc;
       color: white;
+      border: none;
       border-radius: 5px;
       cursor: pointer;
     }
-    img {
+    #image {
       display: block;
-      margin: 0 auto 30px auto;
-      max-width: 100%;
-      border-radius: 8px;
+      margin: 20px auto;
+      max-width: 300px;
+      border-radius: 10px;
+    }
+    .info-container {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
     }
     .category {
       background-color: white;
-      padding: 15px;
-      margin-bottom: 20px;
-      border-radius: 10px;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      min-width: 200px;
     }
-    .category h2 {
+    .category h3 {
       margin-top: 0;
+      color: #004080;
     }
-    .category ul {
-      list-style-type: none;
-      padding-left: 0;
-    }
-    .category li {
-      padding: 5px 0;
-      border-bottom: 1px solid #eee;
+    .category p {
+      margin: 5px 0;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Fordonsuppgifter</h1>
-    <div class="input-section">
-      <input type="text" id="regNumber" placeholder="Ange registreringsnummer" />
-      <button onclick="getVehicleInfo()">Sök</button>
+  <h1>Fordonsuppgifter – JoAPI2</h1>
+
+  <div id="searchSection">
+    <input type="text" id="regnr" placeholder="Ange registreringsnummer" />
+    <button onclick="getVehicleData()">Sök</button>
+  </div>
+
+  <img id="image" src="" alt="Fordonsbild" style="display: none;" />
+
+  <div class="info-container" id="infoSection" style="display: none;">
+    <div class="category" id="carCategory">
+      <h3>Bil</h3>
+      <p><strong>Märke:</strong> <span id="make"></span></p>
+      <p><strong>Modell:</strong> <span id="model"></span></p>
+      <p><strong>Kaross:</strong> <span id="bodyStyle"></span></p>
+      <p><strong>Färg:</strong> <span id="color"></span></p>
     </div>
-    <img id="carImage" src="" alt="" style="display: none;" />
-    <div id="vehicleInfo"></div>
+
+    <div class="category" id="engineCategory">
+      <h3>Motor</h3>
+      <p><strong>Motorstorlek:</strong> <span id="engineSize"></span></p>
+      <p><strong>Bränsletyp:</strong> <span id="fuelType"></span></p>
+      <p><strong>Växellåda:</strong> <span id="transmission"></span></p>
+      <p><strong>CO2 utsläpp:</strong> <span id="co2"></span></p>
+    </div>
+
+    <div class="category" id="idCategory">
+      <h3>Identifikation</h3>
+      <p><strong>Antal säten:</strong> <span id="seats"></span></p>
+      <p><strong>VIN-nummer:</strong> <span id="vin"></span></p>
+    </div>
   </div>
 
   <script>
-    async function getVehicleInfo() {
-      const regNumber = document.getElementById("regNumber").value.trim();
-      const image = document.getElementById("carImage");
-      const info = document.getElementById("vehicleInfo");
-
-      if (!regNumber) {
-        alert("Ange ett registreringsnummer");
-        return;
-      }
-
-      info.innerHTML = "Hämtar information...";
-      image.style.display = "none";
+    async function getVehicleData() {
+      const regNr = document.getElementById('regnr').value.trim().toUpperCase();
+      if (!regNr) return alert("Ange ett registreringsnummer.");
 
       try {
-        const response = await fetch(`https://fordonsuppgifter-backend.onrender.com/vehicle/${regNr}`)
-        const data = await response.json();
+        const response = await fetch(`https://www.regcheck.org.uk/api/CheckSweden/${regNr}?apikey=demo`);
+        const xmlText = await response.text();
 
-        // Visa bild
-        image.src = data.ImageURL;
-        image.style.display = "block";
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(xmlText, "text/xml");
+        const jsonText = xmlDoc.getElementsByTagName("vehicleJson")[0].textContent;
+        const data = JSON.parse(jsonText);
 
-        // Kategorisera och visa data
-        info.innerHTML = `
-          <div class="category">
-            <h2>Bil</h2>
-            <ul>
-              <li><strong>Märke:</strong> ${data.Make}</li>
-              <li><strong>Modell:</strong> ${data.Model}</li>
-              <li><strong>Färg:</strong> ${data.Color || "Okänd"}</li>
-              <li><strong>Antal säten:</strong> ${data.NumberOfSeats || "Okänt"}</li>
-              <li><strong>Kaross:</strong> ${data.BodyStyle || "Okänd"}</li>
-            </ul>
-          </div>
-          <div class="category">
-            <h2>Motor</h2>
-            <ul>
-              <li><strong>Bränsletyp:</strong> ${data.FuelType || "Okänt"}</li>
-              <li><strong>Växellåda:</strong> ${data.Transmission || "Okänd"}</li>
-              <li><strong>Motorstorlek:</strong> ${data.EngineSize || "Okänd"}</li>
-              <li><strong>CO₂-utsläpp:</strong> ${data.Co2 || "Okänt"}</li>
-            </ul>
-          </div>
-          <div class="category">
-            <h2>Identifikation</h2>
-            <ul>
-              <li><strong>VIN:</strong> ${data.Vin || "Okänt"}</li>
-              <li><strong>Registreringsår:</strong> ${data.RegistrationYear || "Okänt"}</li>
-            </ul>
-          </div>
-        `;
+        // Bild
+        const imageUrl = data.ImageUrl;
+        const img = document.getElementById("image");
+        img.src = imageUrl;
+        img.style.display = "block";
+
+        // Bil
+        document.getElementById("make").textContent = data.CarMake?.CurrentTextValue || "-";
+        document.getElementById("model").textContent = data.CarModel?.CurrentTextValue || "-";
+        document.getElementById("bodyStyle").textContent = data.BodyStyle?.CurrentTextValue || "-";
+        document.getElementById("color").textContent = data.Colour || "-";
+
+        // Motor
+        document.getElementById("engineSize").textContent = data.EngineSize?.CurrentTextValue || "-";
+        document.getElementById("fuelType").textContent = data.FuelType?.CurrentTextValue || "-";
+        document.getElementById("transmission").textContent = data.Transmission || "-";
+        document.getElementById("co2").textContent = data.Co2 || "-";
+
+        // Identifikation
+        document.getElementById("seats").textContent = data.NumberOfSeats?.CurrentTextValue || "-";
+        document.getElementById("vin").textContent = data.VechileIdentificationNumber || "-";
+
+        document.getElementById("infoSection").style.display = "flex";
       } catch (error) {
-        info.innerHTML = "Kunde inte hämta fordonsdata.";
-        console.error("Fel:", error);
+        alert("Kunde inte hämta fordonsdata.");
+        console.error(error);
       }
     }
   </script>
