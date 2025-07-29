@@ -88,7 +88,7 @@
       image.style.display = "none";
 
       try {
-        const response = await fetch(`https://fordonsuppgifter-api.onrender.com/vehicle/${regNumber}`);
+        const response = await fetch(`https://fordonsuppgifter-backend.onrender.com/vehicle/${regNr}`)
         const data = await response.json();
 
         // Visa bild
